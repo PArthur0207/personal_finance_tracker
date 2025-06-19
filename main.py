@@ -55,7 +55,6 @@ class Csv:
         return filtered_data_frame
 
 get_entry = DataEntry()
-
 class TrialInputs:
     def __init__(self):
         Csv.initialize_csv()
@@ -69,5 +68,27 @@ class TrialInputs:
         self.category = get_entry.get_category()
         self.description = get_entry.get_description()
         Csv.add_entry(self.date, self.amount, self.category, self.description)
+    
+    def main(self):
+        while True:
+            print("1. Add a new transaction")
+            print("2. Print transaction summary within a date range")
+            print("3. Exit")
+            self.choice = input("Choose from 1 - 3: ").strip()
+            if self.choice == '1':
+                self.add_to_csv()
+            elif self.choice == '2':
+                self.start_date = get_entry.get_date("Enter the start date (dd-mm-yyyy): ")
+                self.end_date = get_entry.get_date("Enter the end date (dd-mm-yyyy): ")
+                self.data_frame = Csv.get_transactions(self.start_date, self.end_date)
+            elif self.choice == '3':
+                print("Exiting...")
+                break
+            else:
+                print("Invalid choice. Please pick from 1-3")
 
-Csv.get_transactions("14-11-2024", "19-06-2025")
+try_now = TrialInputs()
+
+if __name__ == "__main__":
+    try_now.main()
+    
