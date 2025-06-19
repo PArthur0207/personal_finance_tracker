@@ -2,6 +2,7 @@ import pandas as pd
 import csv
 from datetime import datetime
 from data_entry import DataEntry
+import matplotlib.pyplot as plt
 
 class Csv:
     csv_file = "finance_data.csv"
@@ -68,19 +69,46 @@ class TrialInputs:
         self.category = get_entry.get_category()
         self.description = get_entry.get_description()
         Csv.add_entry(self.date, self.amount, self.category, self.description)
-    
+
+    def plot_transactions(self, data_frame):
+        self.data_frame.set_index("date", inplace = True)
+
+        self.income_data_frame = (
+            self.data_frame[self.data_frame["category"] == "Income"]
+            .resample("D")
+            .sum()
+            .reindex(self.data_frame.index, fill_value = 0)
+            )
+        self.expense_data_frame = (
+            self.data_frame[self.data_frame["category"] == "Expense"]
+            .resample("D")
+            .sum()
+            .reindex(self.data_frame.index, fill_value = 0)
+            )
+        plt.figure(figsize = (10, 5))
+        plt.plot(self.income_data_frame.index, self.income_data_frame["amount"], label = "Income", color = "g")
+        plt.plot(self.expense_data_frame.index, self.expense_data_frame["amount"], label = "Expense", color = "r")
+        plt.xlabel("Date")
+        plt.ylabel("Amount")
+        plt.title("Income and Expenses over time")
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+
     def main(self):
         while True:
             print("1. Add a new transaction")
             print("2. Print transaction summary within a date range")
             print("3. Exit")
-            self.choice = input("Choose from 1 - 3: ").strip()
+            self.choice = input("Choose from 1-3: ").strip()
             if self.choice == '1':
                 self.add_to_csv()
             elif self.choice == '2':
                 self.start_date = get_entry.get_date("Enter the start date (dd-mm-yyyy): ")
                 self.end_date = get_entry.get_date("Enter the end date (dd-mm-yyyy): ")
                 self.data_frame = Csv.get_transactions(self.start_date, self.end_date)
+                if input("Do you want to see a plot of this? (y/n) ").lower() != 'n':
+                    self.plot_transactions(self.data_frame)
             elif self.choice == '3':
                 print("Exiting...")
                 break
