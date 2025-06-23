@@ -65,6 +65,7 @@ Used in: CSVStorage.write_entry() saves to CSV, JSONStorage.write_entry() saves 
 
 ## 📁 Project Structure
 
+```
 finance_tracker/
 ├── main.py               # Main app logic and menu
 ├── data_entry.py         # Handles user input
@@ -72,6 +73,8 @@ finance_tracker/
 ├── finance_data.csv      # Your transaction records (CSV)
 ├── finance_data.json     # Same records in JSON format
 ├── README.md             # This file
+```
+
 
 ## 🙏 Credits
 
