@@ -2,10 +2,9 @@ import pandas as pd
 import csv
 from datetime import datetime
 import matplotlib.pyplot as plt
-from data_entry import DataEntry
+from custom_data_entry import CustomDataEntry
 
-
-class FinanceCSV:
+class FinanceStorage:
     FILE_NAME = "finance_data.csv"
     COLUMNS = ["date", "amount", "category", "description"]
     DATE_FORMAT = "%d-%m-%Y"
@@ -16,6 +15,28 @@ class FinanceCSV:
             pd.read_csv(cls.FILE_NAME)
         except FileNotFoundError:
             pd.DataFrame(columns=cls.COLUMNS).to_csv(cls.FILE_NAME, index=False)
+        
+    @classmethod
+    def write_to_csv(cls, new_entry):
+        with open(cls.FILE_NAME, "a", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=cls.COLUMNS)
+            writer.writerow(new_entry)
+
+    @classmethod
+    def write_to_json(cls, new_entry):
+        import os
+        json_file = "finance_data.json"
+        try:
+            if os.path.exists(json_file):
+                df = pd.read_json(json_file)
+                existing_data = df.to_dict(orient="records")
+            else:
+                existing_data = []
+        except Exception:
+            existing_data = []
+
+        existing_data.append(new_entry)
+        pd.DataFrame(existing_data).to_json(json_file, indent=4)
 
     @classmethod
     def add_entry(cls, date, amount, category, description):
@@ -25,9 +46,10 @@ class FinanceCSV:
             "category": category,
             "description": description
         }
-        with open(cls.FILE_NAME, "a", newline="") as file:
-            writer = csv.DictWriter(file, fieldnames=cls.COLUMNS)
-            writer.writerow(new_entry)
+
+        cls.write_to_csv(new_entry)
+        cls.write_to_json(new_entry)
+
         print("Entry added successfully.")
 
     @classmethod
@@ -58,8 +80,8 @@ class FinanceCSV:
 
 class FinanceApp:
     def __init__(self):
-        self.data_entry = DataEntry()
-        FinanceCSV.initialize()
+        self.data_entry = CustomDataEntry()
+        FinanceStorage.initialize()
 
     def add_transaction(self):
         date = self.data_entry.get_date(
@@ -67,7 +89,7 @@ class FinanceApp:
         amount = self.data_entry.get_amount()
         category = self.data_entry.get_category()
         description = self.data_entry.get_description()
-        FinanceCSV.add_entry(date, amount, category, description)
+        FinanceStorage.add_entry(date, amount, category, description)
 
     def plot_transactions(self, df):
         df.set_index("date", inplace=True)
@@ -106,7 +128,7 @@ class FinanceApp:
             elif choice == '2':
                 start = self.data_entry.get_date("Enter start date (dd-mm-yyyy): ")
                 end = self.data_entry.get_date("Enter end date (dd-mm-yyyy): ")
-                df = FinanceCSV.get_transactions(start, end)
+                df = FinanceStorage.get_transactions(start, end)
                 if not df.empty:
                     if input("Would you like to plot the transactions? (y/n): ").lower() == 'y':
                         self.plot_transactions(df)

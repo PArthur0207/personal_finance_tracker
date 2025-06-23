@@ -31,3 +31,6 @@ date,amount,category,description
 19-06-2025,200.00,Expense,Food
 19-06-2025,100.00,Expense,Coffee
 19-06-2025,500.00,Income,Salary
+23-06-2025,200.0,Income,No description provided
+01-06-2025,200.0,Expense,coffee
+23-06-2025,2000.0,Income,stipend

@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 class DataEntry:
     DATE_FORMAT = "%d-%m-%Y"
     CATEGORY_MAP = {"I": "Income", "E": "Expense"}
@@ -20,7 +19,7 @@ class DataEntry:
 
     def get_amount(self):
         try:
-            amount = float(input("💰 Enter the amount: ").strip())
+            amount = float(input("Enter the amount: ").strip())
             if amount <= 0:
                 raise ValueError("Amount must be a positive number.")
             return amount

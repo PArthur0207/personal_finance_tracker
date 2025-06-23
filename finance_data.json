@@ -1,0 +1,22 @@
+{
+    "date":{
+        "0":1750636,
+        "1":1736121600000,
+        "2":"23-06-2025"
+    },
+    "amount":{
+        "0":200.0,
+        "1":200.0,
+        "2":2000.0
+    },
+    "category":{
+        "0":"Income",
+        "1":"Expense",
+        "2":"Income"
+    },
+    "description":{
+        "0":"No description provided",
+        "1":"coffee",
+        "2":"stipend"
+    }
+}
